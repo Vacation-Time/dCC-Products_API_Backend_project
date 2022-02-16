@@ -5,6 +5,40 @@ from rest_framework import status
 from .serializers import ProductSerializer
 from .models import Product
 from products import serializers
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+# Create your views here.
+
+
+def image_view(request):
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = ProductForm()
+    return render(request, 'image_form.html', {'form': form})
+
+
+def success(request):
+    return HttpResponse('successfully uploaded')
+
+# Python program to view
+# for displaying images
+
+
+def display_images(request):
+
+    if request.method == 'GET':
+
+        # getting all the objects of product.
+        products = Product.objects.all()
+        return render((request, 'display_images.html',
+                                {'images': products}))
 
 
 @api_view(['GET', 'POST'])
